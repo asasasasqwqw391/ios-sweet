@@ -1,5 +1,5 @@
 diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
-index 61b44d5..dd479e8 100644
+index 61b44d5..33b1e78 100644
 --- a/osfmk/arm64/start.s
 +++ b/osfmk/arm64/start.s
 @@ -718,6 +718,21 @@ Lkernelcache_base_found:
@@ -24,14 +24,13 @@ index 61b44d5..dd479e8 100644
  Lsweet_fb_map_done:
  #endif
  
-@@ -757,6 +772,14 @@ common_start:
+@@ -757,6 +772,13 @@ common_start:
  	ldr		x1, [x0, SR_RESTORE_TCR_EL1]
  	MSR_TCR_EL1_X1
  
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #6
++	MOV64	x8, 0x4f4e434d06
 +	str	x8, [x9]
 +	dsb	sy
 +#endif
@@ -39,15 +38,14 @@ index 61b44d5..dd479e8 100644
  	/* Set up translation table base registers.
  	 *	TTBR0 - V=P table @ top of kernel
  	 *	TTBR1 - KVA table @ top of kernel + 1 page
-@@ -770,10 +793,26 @@ common_start:
+@@ -770,10 +792,24 @@ common_start:
  	mov		x19, lr
  	bl		EXT(set_mmu_ttb)
  	mov		lr, x19
 +
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #7
++	MOV64	x8, 0x4f4e434d07
 +	str	x8, [x9]
 +	dsb	sy
 +#endif
@@ -57,8 +55,7 @@ index 61b44d5..dd479e8 100644
  
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #8
++	MOV64	x8, 0x4f4e434d08
 +	str	x8, [x9]
 +	dsb	sy
 +#endif
@@ -66,14 +63,13 @@ index 61b44d5..dd479e8 100644
  	// Set up MAIR attr0 for normal memory, attr1 for device memory
  	mov		x0, xzr
  	mov		x1, #(MAIR_WRITEBACK << MAIR_ATTR_SHIFT(CACHE_ATTRINDX_WRITEBACK))
-@@ -797,6 +836,14 @@ common_start:
+@@ -797,6 +833,13 @@ common_start:
  	tlbi	vmalle1
  	dsb		ish
  
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #9
++	MOV64	x8, 0x4f4e434d09
 +	str	x8, [x9]
 +	dsb	sy
 +#endif
@@ -81,14 +77,13 @@ index 61b44d5..dd479e8 100644
  
  #if defined(BCM2837)
  	// Setup timer interrupt routing; must be done before MMU is enabled
-@@ -859,10 +906,26 @@ common_start:
+@@ -859,10 +902,24 @@ common_start:
  #endif /* HAS_APPLE_PAC */
  
  	// Enable caches, MMU, ROP and JOP
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #10
++	MOV64	x8, 0x4f4e434d10
 +	str	x8, [x9]
 +	dsb	sy
 +#endif
@@ -98,8 +93,7 @@ index 61b44d5..dd479e8 100644
  
 +#if defined(SWEET)
 +	MOV64	x9, 0xBFEE0000
-+	MOV64	x8, 0x4f4e434d00
-+	orr	x8, x8, #11
++	MOV64	x8, 0x4f4e434d11
 +	str	x8, [x9]
 +	dc	cvac, x9
 +	dsb	sy
