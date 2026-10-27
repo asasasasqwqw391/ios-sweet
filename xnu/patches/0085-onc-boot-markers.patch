@@ -1,0 +1,49 @@
+diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
+index 61b44d5..b7a1d8d 100644
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -513,6 +513,14 @@ LEXT(start_first_cpu)
+ 	mov		x20, x0
+ 	mov		x21, #0
+ 
++#if defined(SWEET)
++	/* onc: boot-progress marker 1, read back by the shim after reset. */
++	MOV64	x9, 0xBFEE0000
++	MOV64	x8, 0x4f4e434d01
++	str	x8, [x9, #8]
++	dsb	sy
++#endif
++
+ #if defined(SWEET)
+ 	/*
+ 	 * Stage 0: white 64x32 band at the bottom-left of the panel, no stack
+@@ -545,6 +553,15 @@ Lsweet_mark_done:
+ 	dsb		sy
+ #endif
+ 
++#if defined(SWEET)
++	/* onc: boot-progress marker 2, read back by the shim after reset. */
++	MOV64	x9, 0xBFEE0000
++	MOV64	x8, 0x4f4e434d02
++	str	x8, [x9, #16]
++	dsb	sy
++#endif
++
++
+ 	// Set low reset vector before attempting any loads
+ 	adrp	x0, EXT(LowExceptionVectorBase)@page
+ 	add		x0, x0, EXT(LowExceptionVectorBase)@pageoff
+@@ -724,6 +741,13 @@ Lsweet_fb_map_done:
+ 	/* Ensure TTEs are visible */
+ 	dsb		ish
+ 
++#if defined(SWEET)
++	/* onc: boot-progress marker 3, read back by the shim after reset. */
++	MOV64	x9, 0xBFEE0000
++	MOV64	x8, 0x4f4e434d03
++	str	x8, [x9, #24]
++	dsb	sy
++#endif
+ 
+ 	b		common_start
+ 
