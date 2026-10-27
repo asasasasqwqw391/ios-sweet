@@ -8,7 +8,7 @@ index 61b44d5..b7a1d8d 100644
  
 +#if defined(SWEET)
 +	/* onc: boot-progress marker 1, read back by the shim after reset. */
-+	MOV64	x9, 0x98500000
++	MOV64	x9, 0xBFF70000
 +	MOV64	x8, 0x4f4e434d01
 +	str	x8, [x9, #8]
 +	dsb	sy
@@ -23,7 +23,7 @@ index 61b44d5..b7a1d8d 100644
  
 +#if defined(SWEET)
 +	/* onc: boot-progress marker 2, read back by the shim after reset. */
-+	MOV64	x9, 0x98500000
++	MOV64	x9, 0xBFF70000
 +	MOV64	x8, 0x4f4e434d02
 +	str	x8, [x9, #16]
 +	dsb	sy
@@ -39,7 +39,7 @@ index 61b44d5..b7a1d8d 100644
  
 +#if defined(SWEET)
 +	/* onc: boot-progress marker 3, read back by the shim after reset. */
-+	MOV64	x9, 0x98500000
++	MOV64	x9, 0xBFF70000
 +	MOV64	x8, 0x4f4e434d03
 +	str	x8, [x9, #24]
 +	dsb	sy
