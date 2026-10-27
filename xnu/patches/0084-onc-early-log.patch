@@ -25,7 +25,7 @@ index 9427dc1..5c9823b 100644
 + *   char text[]
 + */
 +#define ONC_LOG_MAGIC  0x4f4e434cU
-+#define ONC_LOG_PA     0xBFF80000UL
++#define ONC_LOG_PA     0xBFFA0000UL
 +#define ONC_LOG_MAX    0x0000f000U
 +
 +static void
