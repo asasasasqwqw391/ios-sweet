@@ -1,3 +1,24 @@
+diff --git a/pexpert/arm/pe_fiq.c b/pexpert/arm/pe_fiq.c
+--- a/pexpert/arm/pe_fiq.c
++++ b/pexpert/arm/pe_fiq.c
+@@ -12,6 +12,17 @@
+ #include <pexpert/device_tree.h>
+ #include <pexpert/arm64/board_config.h>
+ 
++#if defined(SWEET) && !HAS_GIC_V3
++/*
++ * sleh_irq() references sweet_vtimer_intid unconditionally for SWEET, but the
++ * definition used to live inside the HAS_GIC_V3 block.  With the GICv3 driver
++ * compiled out we must still provide it, otherwise the kernel fails to link
++ * with "Undefined symbols: _sweet_vtimer_intid".
++ * The real GICv2 driver will start delivering the timer again.
++ */
++SECURITY_READ_ONLY_LATE(uint32_t) sweet_vtimer_intid = SWEET_VTIMER_INTID;
++#endif
++
+ 
+ #if HAS_GIC_V3
+ #define GICR_WAKE_TIMEOUT_NS (1000000000ULL) // timeout for redistributor wakeup (default 1s)
 diff --git a/pexpert/pexpert/arm64/SWEET.h b/pexpert/pexpert/arm64/SWEET.h
 --- a/pexpert/pexpert/arm64/SWEET.h
 +++ b/pexpert/pexpert/arm64/SWEET.h
