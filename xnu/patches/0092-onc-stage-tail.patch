@@ -1,17 +1,19 @@
 diff --git a/osfmk/arm/arm_init.c b/osfmk/arm/arm_init.c
 --- a/osfmk/arm/arm_init.c
 +++ b/osfmk/arm/arm_init.c
-@@ -340,6 +340,10 @@
- arm_init(
- 	boot_args       *args)
- {
+@@ -347,6 +347,12 @@
+ 	DTEntry chosen = NULL;
+ 	unsigned int dt_entry_size = 0;
+ 
 +#if defined(SWEET)
++	/* onc: stage 16 -- we are in C code, past the MMU enable and the ret */
 +	*(volatile unsigned long long *)0xBFEE0000ULL = 0x4f4e434d10ULL;
 +	__asm__ volatile("dsb sy" ::: "memory");
 +#endif
- 	unsigned int    maxmem;
- 	uint32_t        memsize;
- 	uint64_t        xmaxmem;
++
+ 	sweet_early_init(args);
+ 	sweet_early_mark(1, "arm_init entered (MMU on)");
+ 
 diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
 --- a/osfmk/arm64/start.s
 +++ b/osfmk/arm64/start.s
