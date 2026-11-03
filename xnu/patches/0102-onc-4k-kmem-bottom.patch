@@ -1,7 +1,7 @@
 diff --git a/osfmk/vm/vm_kern.c b/osfmk/vm/vm_kern.c
 --- a/osfmk/vm/vm_kern.c
 +++ b/osfmk/vm/vm_kern.c
-@@ -3388,6 +3388,34 @@
+@@ -3388,6 +3388,39 @@
  static vm_offset_t
  kmem_fuzz_start(void)
  {
@@ -31,12 +31,17 @@ diff --git a/osfmk/vm/vm_kern.c b/osfmk/vm/vm_kern.c
 +		panic("onc: cannot reserve kernel_map fuzz range at %p",
 +		    (void *)kmapoff_kaddr);
 +	}
++	/* vm_map_find_space() returns with kernel_map write-locked */
++	vm_object_reference(kernel_object);
++	VME_OBJECT_SET(entry, kernel_object, false, 0);
++	VME_OFFSET_SET(entry, entry->vme_start);
++	vm_map_unlock(kernel_map);
 +	return kmapoff_kaddr + kmapoff_size;
 +#else
  	vm_offset_t kmapoff_kaddr = 0;
  	uint32_t kmapoff_pgcnt = (early_random() & 0x1ff) + 1; /* 9 bits */
  	vm_map_size_t kmapoff_size = ptoa(kmapoff_pgcnt);
-@@ -3396,6 +3424,7 @@
+@@ -3396,6 +3429,7 @@
  	    KMA_NOFAIL | KMA_KOBJECT | KMA_PERMANENT | KMA_VAONLY,
  	    VM_KERN_MEMORY_OSFMK);
  	return kmapoff_kaddr + kmapoff_size;
